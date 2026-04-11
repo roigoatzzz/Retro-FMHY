@@ -380,17 +380,6 @@
             color: var(--text-primary);
         }
 
-        .status-badge {
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            padding: 4px 12px;
-            border-radius: 0;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: 1px solid var(--border-color);
-            text-transform: uppercase;
-        }
-
         .content-area {
             flex: 1;
             padding: 40px;
@@ -622,7 +611,6 @@
         <header>
             <button class="menu-btn" onclick="toggleSidebar()">[MENU]</button>
             <h2 id="current-section">Directory Overview</h2>
-            <div class="status-badge" id="statusBadge">Connecting...</div>
         </header>
         
         <div class="content-area" id="mainScroll">
@@ -642,7 +630,6 @@
 
         async function initializeApp() {
             const contentDiv = document.getElementById('content');
-            const statusBadge = document.getElementById('statusBadge');
             const loadingText = document.getElementById('loadingText');
 
             try {
@@ -653,7 +640,6 @@
                 const rawMarkdown = await response.text();
                 
                 // 2. Parse Markdown to HTML
-                statusBadge.innerText = 'Parsing...';
                 contentDiv.innerHTML = marked.parse(rawMarkdown);
                 
                 // 3. Post-process
@@ -665,19 +651,12 @@
                 initializeResizer();
                 loadSavedTheme();
                 
-                statusBadge.innerText = 'ONLINE';
-                statusBadge.style.color = '#00ff00';
-
             } catch (error) {
                 loadingText.innerHTML = `
                     <span style="color: #ef4444;">Connection Failed</span><br>
                     <small style="margin-top: 8px; display: inline-block;">Failed to fetch from ${API_URL}. Cross-Origin Resource Sharing (CORS) might be blocking the browser request.</small>
                 `;
                 document.querySelector('.spinner').style.display = 'none';
-                statusBadge.innerText = 'Disconnected';
-                statusBadge.style.color = '#ef4444';
-                statusBadge.style.backgroundColor = 'transparent';
-                statusBadge.style.borderColor = '#ef4444';
                 console.error('Fetch Error:', error);
             }
         }
